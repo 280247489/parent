@@ -1,6 +1,8 @@
 package com.memory.rabbitmq;
 
 import com.memory.rabbitmq.entity.IMMessage;
+import com.rabbitmq.client.BuiltinExchangeType;
+import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.ConnectionFactory;
 import org.springframework.amqp.rabbit.connection.CorrelationData;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
@@ -23,11 +25,28 @@ public class RabbitMQUtil {
         rabbitTemplate.convertAndSend("im-exchange-single", routingKey, imMessage, correlationData);
         return true;
     }
-    //创建路由交换机
-    public void createExChange(){
-        ConnectionFactory factory = new ConnectionFactory();
-        factory.
+    //获取通信管道
+    public Channel getChannel(){
+        return rabbitTemplate.getConnectionFactory().createConnection().createChannel(false);
     }
-    //创建消息队列
-    //绑定消息队列
+    //创建群组
+    public void createGroup(Channel channel, String groupId) throws Exception{
+        channel.exchangeDeclare(groupId, BuiltinExchangeType.FANOUT);
+    }
+    //创建用户
+    public void createUser(Channel channel, String userId) throws Exception{
+        channel.queueDeclare(userId, false, false, false, null);
+    }
+    //加入群成员
+    public void joinGroup(Channel channel, String groupId, String userId) throws Exception{
+        channel.queueBind(userId, groupId, "");
+    }
+    //移除群成员
+    public void removeGroup(Channel channel, String groupId, String userId) throws Exception{
+        channel.queueUnbind(userId, groupId, "");
+    }
+    //删除群
+    public void deleteGroup(Channel channel, String groupId) throws Exception{
+        channel.exchangeDelete(groupId, true);
+    }
 }

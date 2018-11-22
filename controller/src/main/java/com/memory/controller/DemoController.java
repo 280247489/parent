@@ -48,8 +48,13 @@ public class DemoController {
         logger.info("这是INFO");
         logger.error("这是ERROR");
         //throw new NullPointerException("自定义空指针异常");
-        String [] a ={"a", "b"};
-        return ResultUtil.success(redisUtil.set("name", JSON.toJSONString(a)));
+        try {
+            rabbitMQUtil.createExChange("group1", "user1");
+            rabbitMQUtil.createExChange("group1", "user2");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResultUtil.success();
     }
 
     @RequestMapping(value = "add/{name}/{sex}/{age}")
