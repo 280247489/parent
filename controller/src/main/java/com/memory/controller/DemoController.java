@@ -49,8 +49,7 @@ public class DemoController {
         logger.error("这是ERROR");
         //throw new NullPointerException("自定义空指针异常");
         try {
-            rabbitMQUtil.createExChange("group1", "user1");
-            rabbitMQUtil.createExChange("group1", "user2");
+            rabbitMQUtil.createGroup("group3");
         } catch (Exception e) {
             e.printStackTrace();
         }
