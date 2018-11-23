@@ -46,11 +46,11 @@ public class DemoFilter implements Filter {
         //请求类型，请求地址，请IP
         StringBuffer stringBuffer = new StringBuffer("" +
                 "\n--------begin--------------------" +
-                "\n-> Request : " + req.getMethod() + " | " + req.getRemoteAddr() +
-                "\n-> " + req.getRequestURL() +
-                "\n-> " + req.getQueryString() +
+                "\n→ Request : " + req.getMethod() + " | " + req.getRemoteAddr() +
+                "\n→ " + req.getRequestURL() +
+                "\n→ " + req.getQueryString() +
                 "\n-------------------end-----------");
-        logger.info(stringBuffer.toString());
+        logger.info("↓↓↓"+stringBuffer.toString());
         filterChain.doFilter(req, res);
     }
 
