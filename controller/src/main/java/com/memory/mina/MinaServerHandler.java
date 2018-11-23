@@ -1,8 +1,12 @@
 package com.memory.mina;
 
+import com.memory.rabbitmq.utils.RabbitMQUtil;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @Auther: cui.Memory
@@ -10,45 +14,53 @@ import org.apache.mina.core.session.IoSession;
  * @Description:
  */
 public class MinaServerHandler extends IoHandlerAdapter {
+    private final static Logger logger = LoggerFactory.getLogger(MinaServerHandler.class);
+    @Autowired
+    private RabbitMQUtil rabbitMQUtil;
     @Override
     public void sessionCreated(IoSession session) throws Exception {
-        System.out.println("server-sessionCreated");
+        logger.info("server-sessionCreated");
         super.sessionCreated(session);
     }
 
     @Override
     public void sessionOpened(IoSession session) throws Exception {
-        System.out.println("server-sessionOpened");
+        logger.info("server-sessionOpened");
         super.sessionOpened(session);
     }
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
-        System.out.println("server-sessionClosed");
+        logger.info("server-sessionClosed");
         super.sessionClosed(session);
     }
 
     @Override
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-        System.out.println("server-sessionIdle");
+        logger.info("server-sessionIdle");
         super.sessionIdle(session, status);
     }
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-        System.out.println("server-exceptionCaught");
+        logger.info("server-exceptionCaught");
         super.exceptionCaught(session, cause);
     }
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
-        System.out.println("server-messageReceived: " + message.toString());
+        logger.info("server-messageReceived: " + message.toString());
         super.messageReceived(session, message);
+        if(message.toString().equals("init")){
+            logger.info("RabbitMQ - init");
+            rabbitMQUtil.init();
+            logger.info("RabbitMQ - init - end");
+        }
     }
 
     @Override
     public void messageSent(IoSession session, Object message) throws Exception {
-        System.out.println("server-messageSent: " + message.toString());
+        logger.info("server-messageSent: " + message.toString());
         super.messageSent(session, message);
     }
 }

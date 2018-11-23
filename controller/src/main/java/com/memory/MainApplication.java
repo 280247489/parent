@@ -16,6 +16,5 @@ public class MainApplication extends SpringBootServletInitializer {
 
     public static void main(String[] args) {
         SpringApplication.run(MainApplication.class, args);
-        MinaServer.main(args);
     }
 }

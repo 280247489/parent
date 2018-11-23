@@ -1,11 +1,9 @@
 package com.memory.controller;
 
-import com.alibaba.fastjson.JSON;
 import com.memory.common.utils.Result;
 import com.memory.common.utils.ResultUtil;
 import com.memory.domain.entity.Demo;
-import com.memory.rabbitmq.RabbitMQUtil;
-import com.memory.redis.RedisUtil;
+import com.memory.rabbitmq.utils.RabbitMQUtil;
 import com.memory.service.DemoService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,28 +29,13 @@ public class DemoController {
 
     @Autowired
     private DemoService demoService;
-    @Autowired
-    private RedisUtil redisUtil;
-    @Autowired
-    private RabbitMQUtil rabbitMQUtil;
 
-    @RequestMapping("send/{from}/{to}/{msg}")
-    public Result send(@PathVariable String from, @PathVariable String to, @PathVariable String msg){
-        logger.info("发送消息接口");
-
-        return ResultUtil.success();
-    }
     @RequestMapping("test")
     public Result test() {
         logger.debug("这是DEBUG");
         logger.info("这是INFO");
         logger.error("这是ERROR");
         //throw new NullPointerException("自定义空指针异常");
-        try {
-            rabbitMQUtil.createGroup("group3");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return ResultUtil.success();
     }
 

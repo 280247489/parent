@@ -5,6 +5,7 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.prefixedstring.PrefixedStringCodecFactory;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
@@ -15,11 +16,10 @@ import java.nio.charset.Charset;
  * @Date: 2018/11/19 0019 8:40
  * @Description:
  */
+@Component
 public class MinaServer {
-
     private static final int PORT = 9123;
-
-    public static void main(String[] args) {
+    public void startup() {
         try {
             NioSocketAcceptor acceptor = new NioSocketAcceptor();
             acceptor.getFilterChain().addLast("logger", new LoggingFilter());
