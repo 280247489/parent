@@ -7,14 +7,16 @@ import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * @Auther: cui.Memory
  * @Date: 2018/11/19 0019 13:44
  * @Description:
  */
-public class MinaServerHandler extends IoHandlerAdapter {
-    private final static Logger logger = LoggerFactory.getLogger(MinaServerHandler.class);
+@Component
+public class MinaServerIoHandler extends IoHandlerAdapter {
+    private final static Logger logger = LoggerFactory.getLogger(MinaServerIoHandler.class);
     @Autowired
     private RabbitMQUtil rabbitMQUtil;
     @Override
@@ -55,6 +57,16 @@ public class MinaServerHandler extends IoHandlerAdapter {
             logger.info("RabbitMQ - init");
             rabbitMQUtil.init();
             logger.info("RabbitMQ - init - end");
+        }else if("del".equals(message.toString().toLowerCase())){
+            logger.info("RabbitMQ - del");
+
+            for (int i = 0; i < 500; i++) {
+                rabbitMQUtil.delUser(""+i);
+            }
+            for (int i = 0; i < 500; i++) {
+                rabbitMQUtil.delGroup(""+i);
+            }
+            logger.info("RabbitMQ - del - end");
         }
     }
 

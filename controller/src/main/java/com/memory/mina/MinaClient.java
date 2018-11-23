@@ -30,7 +30,8 @@ public class MinaClient {
             future.awaitUninterruptibly();
             IoSession session = future.getSession();
             System.out.println("mina-client-success");
-            session.write("init");
+            //session.write("init");
+            session.write("del");
         } catch (Exception e) {
             System.err.println("连接失败");
             e.printStackTrace();
