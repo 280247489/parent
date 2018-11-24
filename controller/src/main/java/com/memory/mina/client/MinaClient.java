@@ -26,25 +26,25 @@ public class MinaClient {
     private static final int IDELTIMEOUT = 30;
     private static final int HEARTBEATRATE = 60;
     public static void main(String[] args) {
-        IoConnector connector = new NioSocketConnector();
-        connector.getFilterChain().addLast("logger", new LoggingFilter());
-        connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(
-                new PrefixedStringCodecFactory(Charset.forName("UTF-8"))));
-
-        KeepAliveFilter heartBeat = new KeepAliveFilter(new MinaClientKeepAliveMessage(), IdleStatus.BOTH_IDLE,
-                new MinaClientKeepAliveRequestTimeoutHandler());
-        connector.getFilterChain().addLast("heartBeat", heartBeat);
-        //设置是否forward到下一个filter
-        heartBeat.setForwardEvent(true);
-        //设置心跳频率
-        heartBeat.setRequestInterval(HEARTBEATRATE);
-        heartBeat.setRequestTimeout(IDELTIMEOUT);
-        connector.setHandler(new MinaClientHandler());
         try {
+            IoConnector connector = new NioSocketConnector();
+            connector.setHandler(new MinaClientHandler());
+            connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(
+                    new PrefixedStringCodecFactory(Charset.forName("UTF-8"))));
+            connector.getFilterChain().addLast("logger", new LoggingFilter());
+
+            KeepAliveFilter heartBeat = new KeepAliveFilter(new MinaClientKeepAliveMessage(), IdleStatus.BOTH_IDLE,
+                    new MinaClientKeepAliveRequestTimeoutHandler());
+            //设置是否forward到下一个filter
+            heartBeat.setForwardEvent(true);
+            //设置心跳频率
+            heartBeat.setRequestInterval(HEARTBEATRATE);
+            heartBeat.setRequestTimeout(IDELTIMEOUT);
+            connector.getFilterChain().addLast("heartBeat", heartBeat);
             ConnectFuture future = connector.connect(new InetSocketAddress("::", PORT));
             future.awaitUninterruptibly();
             IoSession session = future.getSession();
-            session.write("hey");
+            session.write("0x11");
         } catch (Exception e) {
             System.err.println("连接失败");
             e.printStackTrace();

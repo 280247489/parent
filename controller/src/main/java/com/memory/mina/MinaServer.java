@@ -40,15 +40,16 @@ public class MinaServer {
             acceptor.setHandler(minaServerIoHandler);
             acceptor.getSessionConfig().setReadBufferSize(2048);
             //acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, IDELTIME);
+            acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(
+                    new PrefixedStringCodecFactory(Charset.forName("UTF-8"))));
+            acceptor.getFilterChain().addLast("logger", new LoggingFilter());
+
             KeepAliveFilter heartBeat = new KeepAliveFilter(minaServerKeepAliveMessage, IdleStatus.BOTH_IDLE);
             //设置是否forward到下一个filter
             heartBeat.setForwardEvent(true);
             //设置心跳频率
             heartBeat.setRequestInterval(HEARTBEATRATE);
             //heartBeat.setRequestTimeout(IDELTIMEOUT);
-            acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(
-                    new PrefixedStringCodecFactory(Charset.forName("UTF-8"))));
-            acceptor.getFilterChain().addLast("logger", new LoggingFilter());
             acceptor.getFilterChain().addLast("heartbeat", heartBeat);
             acceptor.bind(new InetSocketAddress(PORT));
 

@@ -54,5 +54,6 @@ public class MinaClientHandler extends IoHandlerAdapter {
     public void messageSent(IoSession session, Object message) throws Exception {
         //logger.info("client-messageSent: {}", message.toString());
         super.messageSent(session, message);
+
     }
 }

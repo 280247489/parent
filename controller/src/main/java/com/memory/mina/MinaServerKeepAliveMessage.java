@@ -44,6 +44,7 @@ public class MinaServerKeepAliveMessage implements KeepAliveMessageFactory {
     @Override
     public Object getResponse(IoSession ioSession, Object o) {
         //logger.info("响应预设信息: {}", HEARTBEATRESPONSE);
+        logger.info("server-getResponse: id={}", ioSession.getId());
         return HEARTBEATRESPONSE;
     }
 }
