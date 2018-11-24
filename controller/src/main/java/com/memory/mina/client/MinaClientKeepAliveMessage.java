@@ -1,4 +1,4 @@
-package com.memory.mina;
+package com.memory.mina.client;
 
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.keepalive.KeepAliveMessageFactory;
@@ -13,8 +13,8 @@ import org.springframework.stereotype.Component;
  * @description:
  */
 @Component
-public class MinaServerKeepAliveMessage implements KeepAliveMessageFactory {
-    private static final Logger logger = LoggerFactory.getLogger(MinaServerKeepAliveMessage.class);
+public class MinaClientKeepAliveMessage implements KeepAliveMessageFactory {
+    private static final Logger logger = LoggerFactory.getLogger(MinaClientKeepAliveMessage.class);
     /** 心跳包内容 */
     private static final String HEARTBEATREQUEST = "0x01";
     private static final String HEARTBEATRESPONSE = "0x02";
@@ -38,12 +38,12 @@ public class MinaServerKeepAliveMessage implements KeepAliveMessageFactory {
     @Override
     public Object getRequest(IoSession ioSession) {
         //logger.info("请求预设信息: {}", HEARTBEATREQUEST);
-        //return HEARTBEATREQUEST;
-        return null;
+        return HEARTBEATREQUEST;
     }
+
     @Override
     public Object getResponse(IoSession ioSession, Object o) {
         //logger.info("响应预设信息: {}", HEARTBEATRESPONSE);
-        return HEARTBEATRESPONSE;
+        return null;
     }
 }

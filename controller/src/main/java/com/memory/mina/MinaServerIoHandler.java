@@ -21,58 +21,46 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
     private RabbitMQUtil rabbitMQUtil;
     @Override
     public void sessionCreated(IoSession session) throws Exception {
-        logger.info("server-sessionCreated");
+        //logger.info("server-sessionCreated");
         super.sessionCreated(session);
     }
 
     @Override
     public void sessionOpened(IoSession session) throws Exception {
-        logger.info("server-sessionOpened");
+        //logger.info("server-sessionOpened");
         super.sessionOpened(session);
     }
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
-        logger.info("server-sessionClosed");
+        //logger.info("server-sessionClosed");
         super.sessionClosed(session);
     }
 
     @Override
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-        logger.info("server-sessionIdle");
+        //logger.info("server-sessionIdle");
+        //session.closeNow();
+        //***服务端处理断连session
+        logger.info("server-心跳请求超时，与客户端断开连接");
         super.sessionIdle(session, status);
     }
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-        logger.info("server-exceptionCaught");
+        //logger.info("server-exceptionCaught");
         super.exceptionCaught(session, cause);
     }
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
-        logger.info("server-messageReceived: " + message.toString());
+        //logger.info("server-messageReceived: " + message.toString());
         super.messageReceived(session, message);
-        if(message.toString().equals("init")){
-            logger.info("RabbitMQ - init");
-            rabbitMQUtil.init();
-            logger.info("RabbitMQ - init - end");
-        }else if("del".equals(message.toString().toLowerCase())){
-            logger.info("RabbitMQ - del");
-
-            for (int i = 0; i < 500; i++) {
-                rabbitMQUtil.delUser(""+i);
-            }
-            for (int i = 0; i < 500; i++) {
-                rabbitMQUtil.delGroup(""+i);
-            }
-            logger.info("RabbitMQ - del - end");
-        }
     }
 
     @Override
     public void messageSent(IoSession session, Object message) throws Exception {
-        logger.info("server-messageSent: " + message.toString());
+        //logger.info("server-messageSent: " + message.toString());
         super.messageSent(session, message);
     }
 }
