@@ -33,7 +33,7 @@ public class MinaClient {
                     new PrefixedStringCodecFactory(Charset.forName("UTF-8"))));
             connector.getFilterChain().addLast("logger", new LoggingFilter());
 
-            KeepAliveFilter heartBeat = new KeepAliveFilter(new MinaClientKeepAliveMessage(), IdleStatus.BOTH_IDLE,
+            KeepAliveFilter heartBeat = new KeepAliveFilter(new MinaClientKeepAliveMessage(), IdleStatus.WRITER_IDLE,
                     new MinaClientKeepAliveRequestTimeoutHandler());
             //设置是否forward到下一个filter
             heartBeat.setForwardEvent(true);
@@ -44,7 +44,8 @@ public class MinaClient {
             ConnectFuture future = connector.connect(new InetSocketAddress("::", PORT));
             future.awaitUninterruptibly();
             IoSession session = future.getSession();
-            session.write("0x11");
+            session.setAttribute("uid", "user1");
+            session.write("客户端连接: "+ session.getAttribute("uid"));
         } catch (Exception e) {
             System.err.println("连接失败");
             e.printStackTrace();

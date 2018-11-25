@@ -29,14 +29,21 @@ public class DemoController {
 
     @Autowired
     private DemoService demoService;
+    @Autowired
+    private RabbitMQUtil rabbitMQUtil;
 
     @RequestMapping("test")
     public Result test() {
-        logger.debug("这是DEBUG");
+        /*logger.debug("这是DEBUG");
         logger.info("这是INFO");
         logger.error("这是ERROR");
-        //throw new NullPointerException("自定义空指针异常");
-        return ResultUtil.success();
+        throw new NullPointerException("自定义空指针异常");*/
+        try {
+            rabbitMQUtil.send("一条新的群消息");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResultUtil.success(null);
     }
 
     @RequestMapping(value = "add/{name}/{sex}/{age}")

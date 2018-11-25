@@ -44,7 +44,7 @@ public class MinaServer {
                     new PrefixedStringCodecFactory(Charset.forName("UTF-8"))));
             acceptor.getFilterChain().addLast("logger", new LoggingFilter());
 
-            KeepAliveFilter heartBeat = new KeepAliveFilter(minaServerKeepAliveMessage, IdleStatus.BOTH_IDLE);
+            KeepAliveFilter heartBeat = new KeepAliveFilter(minaServerKeepAliveMessage, IdleStatus.READER_IDLE);
             //设置是否forward到下一个filter
             heartBeat.setForwardEvent(true);
             //设置心跳频率
