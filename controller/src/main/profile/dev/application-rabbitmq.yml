@@ -5,9 +5,9 @@ spring:
     username: guest
     password: guest
     connection-timeout: 15000
-    listener:
-      simple:
-        concurrency: 5
-        max-concurrency: 10
-        acknowledge-mode: manual
-        prefetch: 1
+#    listener:
+#      simple:
+#        concurrency: 5
+#        max-concurrency: 10
+#        acknowledge-mode: manual
+#        prefetch: 1
