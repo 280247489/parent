@@ -113,7 +113,7 @@ public class RabbitMQUtil {
     }
     //加入群成员
     public void joinGroup(String groupId, String userId) throws Exception{
-        channel.queueBind(userId, groupId, userId);
+        channel.queueBind(userId, groupId, "");
     }
     //移除群成员
     public void removeGroup(String groupId, String userId) throws Exception{
