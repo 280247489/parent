@@ -1,5 +1,6 @@
 package com.memory.mina.client;
 
+import com.memory.rabbitmq.entity.IMMessage;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -48,6 +49,11 @@ public class MinaClientHandler extends IoHandlerAdapter {
     public void messageReceived(IoSession session, Object message) throws Exception {
         //logger.info("client-messageReceived: {}", message.toString());
         super.messageReceived(session, message);
+        if(message instanceof IMMessage){
+            logger.info("IMMessage: {}", ((IMMessage)message).getContent());
+        }else{
+            logger.info("heartbeat: {}", message.toString());
+        }
     }
 
     @Override

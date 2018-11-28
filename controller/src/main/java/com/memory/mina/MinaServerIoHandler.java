@@ -1,5 +1,8 @@
 package com.memory.mina;
 
+import com.memory.rabbitmq.entity.CloseMessage;
+import com.memory.rabbitmq.entity.IMMessage;
+import com.memory.rabbitmq.entity.OpenMessage;
 import com.memory.rabbitmq.utils.RabbitMQUtil;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
@@ -8,9 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Auther: cui.Memory
@@ -26,19 +26,7 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
     @Override
     public void sessionCreated(IoSession session) throws Exception {
         super.sessionCreated(session);
-
-        //测试数据
-        session.setAttribute("userId", session.getId());
-        session.setAttribute("groupId", "group1");
-
-        String userId = session.getAttribute("userId").toString();
-        String groupId = session.getAttribute("groupId").toString();
-
-        logger.info("sessionCreated: userId: {} - sessionCount: {}", userId, session.getService().getManagedSessionCount());
-        rabbitMQUtil.createUser(userId);
-        rabbitMQUtil.createGroup(groupId);
-        rabbitMQUtil.joinGroup(groupId, userId);
-        rabbitMQUtil.consumeStart(session, userId);
+        logger.info("sessionCreated: sessionCount: {}", session.getService().getManagedSessionCount());
      }
 
     @Override
@@ -70,6 +58,27 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
         super.messageReceived(session, message);
+        if(message instanceof IMMessage){
+            rabbitMQUtil.send((IMMessage)message);
+
+            logger.info("messageReceived-im: {}", ((IMMessage)message).toString());
+        }else if(message instanceof OpenMessage){
+            session.setAttribute("uid", ((OpenMessage)message).getUid());
+            String uid = session.getAttribute("uid").toString();
+
+            rabbitMQUtil.createSingle();
+            rabbitMQUtil.createUser(uid);
+            rabbitMQUtil.joinSingle(uid);
+            rabbitMQUtil.createGroup("group1");
+            rabbitMQUtil.joinGroup("group1", uid);
+            rabbitMQUtil.consumeStart(session, uid);
+
+            logger.info("messageReceived-open: {}", uid);
+        }else if(message instanceof CloseMessage){
+            session.closeOnFlush();
+
+            logger.info("messageReceived-close: {}", ((CloseMessage)message).getUid());
+        }
     }
 
     @Override

@@ -4,31 +4,21 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * @Auther: cui.Memory
- * @Date: 2018/11/7 0007 9:18
- * @Description:
+ * @program parent
+ * @Author: cui.Memory
+ * @Date: 2018/11/28 19:57
+ * @description:
  */
-public class IMMessage implements Serializable{
-    private static final long serialVersionUID = 8652447851744777346L;
+public class IMMessage implements Serializable {
+    private static final long serialVersionUID = 1672637166632693038L;
     private String id;          //消息ID
-    private int type;           //1文本，2图片，3语音，4视频
+    private int type;           //1文本，2图片，3语音，4视频，5系统
+    //1txt-text, 2pic-picture, 3voi-voice, 4vid-video, 5sys-system
     private String content;     //消息内容
     private Date date;          //消息发送时间
     private String from;        //发送人
-    private String to_type;     //接受类型 group群，singel单聊
-    private String to;          //接收人
-    public IMMessage() {
-    }
-
-    public IMMessage(String id, int type, String content, Date date, String from, String to_type, String to) {
-        this.id = id;
-        this.type = type;
-        this.content = content;
-        this.date = date;
-        this.from = from;
-        this.to_type = to_type;
-        this.to = to;
-    }
+    private String toType;     //接受类型 group群，singel单聊
+    private String toId;          //接收人
 
     public String getId() {
         return id;
@@ -70,20 +60,20 @@ public class IMMessage implements Serializable{
         this.from = from;
     }
 
-    public String getTo_type() {
-        return to_type;
+    public String getToType() {
+        return toType;
     }
 
-    public void setTo_type(String to_type) {
-        this.to_type = to_type;
+    public void setToType(String toType) {
+        this.toType = toType;
     }
 
-    public String getTo() {
-        return to;
+    public String getToId() {
+        return toId;
     }
 
-    public void setTo(String to) {
-        this.to = to;
+    public void setToId(String toId) {
+        this.toId = toId;
     }
 
     @Override
@@ -94,8 +84,8 @@ public class IMMessage implements Serializable{
                 ", content='" + content + '\'' +
                 ", date=" + date +
                 ", from='" + from + '\'' +
-                ", to_type='" + to_type + '\'' +
-                ", to='" + to + '\'' +
+                ", toType='" + toType + '\'' +
+                ", toId='" + toId + '\'' +
                 '}';
     }
 }

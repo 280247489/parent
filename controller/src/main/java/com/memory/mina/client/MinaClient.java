@@ -1,11 +1,15 @@
 package com.memory.mina.client;
 
+import com.memory.common.utils.Utils;
+import com.memory.rabbitmq.entity.IMMessage;
+import com.memory.rabbitmq.entity.OpenMessage;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoConnector;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.prefixedstring.PrefixedStringCodecFactory;
+import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;
 import org.apache.mina.filter.keepalive.KeepAliveFilter;
 import org.apache.mina.filter.keepalive.KeepAliveRequestTimeoutHandler;
 import org.apache.mina.filter.logging.LoggingFilter;
@@ -13,6 +17,8 @@ import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 import java.net.InetSocketAddress;
 import java.nio.charset.Charset;
+import java.util.Date;
+import java.util.Scanner;
 
 /**
  * @Auther: cui.Memory
@@ -30,8 +36,8 @@ public class MinaClient {
             IoConnector connector = new NioSocketConnector();
             connector.setHandler(new MinaClientHandler());
             connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(
-                    new PrefixedStringCodecFactory(Charset.forName("UTF-8"))));
-            connector.getFilterChain().addLast("logger", new LoggingFilter());
+                    new ObjectSerializationCodecFactory()));
+            //connector.getFilterChain().addLast("logger", new LoggingFilter());
 
             KeepAliveFilter heartBeat = new KeepAliveFilter(new MinaClientKeepAliveMessage(), IdleStatus.WRITER_IDLE,
                     new MinaClientKeepAliveRequestTimeoutHandler());
@@ -44,8 +50,46 @@ public class MinaClient {
             ConnectFuture future = connector.connect(new InetSocketAddress("::", PORT));
             future.awaitUninterruptibly();
             IoSession session = future.getSession();
-            session.setAttribute("uid", "user1");
-            session.write("客户端连接: "+ session.getAttribute("uid"));
+            OpenMessage openMessage = new OpenMessage();
+            openMessage.setUid("user2");
+            openMessage.setDate(new Date());
+            session.write(openMessage);
+
+            boolean flag ;
+            while(true){
+                flag = true;
+                System.out.println("single OR group ?");
+
+                IMMessage imMessage = new IMMessage();
+                imMessage.setId(Utils.generateUUID());
+                imMessage.setType(1);
+                imMessage.setDate(new Date());
+                imMessage.setFrom(openMessage.getUid());
+
+                Scanner scan = new Scanner(System.in);
+                String read = scan.nextLine();
+                if(read.equals("single")){
+                    imMessage.setToType(read);
+                    System.out.println("To whom ?");
+                    scan = new Scanner(System.in);
+                    imMessage.setToId(scan.nextLine());
+                    System.out.println("msg content ?");
+                    scan = new Scanner(System.in);
+                    imMessage.setContent(scan.nextLine());
+                }else if(read.equals("group")){
+                    imMessage.setToType(read);
+                    imMessage.setToId("group1");
+                    System.out.println("msg content ?");
+                    scan = new Scanner(System.in);
+                    imMessage.setContent(scan.nextLine());
+                }else{
+                    flag = false;
+                    System.out.println("while");
+                }
+                if(flag){
+                    session.write(imMessage);
+                }
+            }
         } catch (Exception e) {
             System.err.println("连接失败");
             e.printStackTrace();

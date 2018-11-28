@@ -3,6 +3,7 @@ package com.memory.mina;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.codec.prefixedstring.PrefixedStringCodecFactory;
+import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;
 import org.apache.mina.filter.keepalive.KeepAliveFilter;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
@@ -41,7 +42,9 @@ public class MinaServer {
             acceptor.getSessionConfig().setReadBufferSize(2048);
             //acceptor.getSessionConfig().setIdleTime(IdleStatus.BOTH_IDLE, IDELTIME);
             acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(
-                    new PrefixedStringCodecFactory(Charset.forName("UTF-8"))));
+                    new ObjectSerializationCodecFactory()));
+            //acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(
+            //        new PrefixedStringCodecFactory(Charset.forName("UTF-8"))));
             acceptor.getFilterChain().addLast("logger", new LoggingFilter());
 
             KeepAliveFilter heartBeat = new KeepAliveFilter(minaServerKeepAliveMessage, IdleStatus.READER_IDLE);
