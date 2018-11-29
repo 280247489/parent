@@ -1,6 +1,6 @@
 package com.memory.service.impl;
 
-import com.memory.domain.dao.DemoRepository;
+import com.memory.domain.repository.DemoRepository;
 import com.memory.domain.entity.Demo;
 import com.memory.service.DemoService;
 import org.springframework.beans.factory.annotation.Autowired;

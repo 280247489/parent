@@ -1,4 +1,4 @@
-package com.memory.domain.dao;
+package com.memory.domain.repository;
 
 
 import com.memory.domain.entity.Demo;
