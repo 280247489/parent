@@ -22,6 +22,6 @@ public class DemoExceptionHandle {
     @ResponseBody
     public Result exceptionHandle(Exception e) {
         logger.error("***异常***\t"+e);
-        return ResultUtil.error(100, e.getMessage());
+        return ResultUtil.error(100, e.getStackTrace().toString());
     }
 }

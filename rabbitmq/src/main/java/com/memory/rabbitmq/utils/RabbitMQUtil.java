@@ -43,20 +43,11 @@ public class RabbitMQUtil {
         return connection.createChannel(false);
     }
 
-    //RabbitMQ初始化
+    /**
+     * RabbitMQ初始化
+     * @throws Exception
+     */
     public void init() throws Exception{
-        //创建单聊路由器
-        channel.exchangeDeclare(EX_CHANGE_SINGLE, BuiltinExchangeType.TOPIC, true);
-        //创建群聊路由器
-        for (int i = 0; i < 100; i++) {
-            channel.exchangeDeclare(""+i, BuiltinExchangeType.FANOUT, true);
-        }
-        //创建用户队列
-        for (int i = 0; i < 100; i++) {
-            channel.queueDeclare(""+i, true, false, false, null);
-            //绑定用户队列
-            channel.queueBind(""+i, "0", ""+i);
-        }
     }
     //发送消息-test
     public Boolean send(String msg) throws Exception{
@@ -65,7 +56,12 @@ public class RabbitMQUtil {
         rabbitTemplate.convertAndSend("group1", "", msg, correlationData);
         return true;
     }
-    //发送消息
+    /**
+     * 发送消息
+     * @param imMessage
+     * @return
+     * @throws Exception
+     */
     public Boolean send(IMMessage imMessage) throws Exception{
         CorrelationData correlationData = new CorrelationData();
         correlationData.setId(imMessage.getId());
@@ -75,9 +71,69 @@ public class RabbitMQUtil {
                 imMessage, correlationData);
         return true;
     }
+
+    /**
+     * 打开RabbitMQ链接
+     * @param ioSession
+     * @return
+     */
+    public boolean open(IoSession ioSession){
+        String groupId = "group1";
+        boolean flag = true;
+        String userId = ioSession.getAttribute("uid").toString();
+        try {
+            //创建单聊路由
+            //创建用户队列-userId
+            //用户队列 绑定 单聊路由
+            channel.exchangeDeclare(EX_CHANGE_SINGLE, BuiltinExchangeType.TOPIC, true);
+            /*
+            Map<String, Object> queueArgs = new HashMap<String, Object>();
+            queueArgs.put("x-dead-letter-exchange", "refreshDispatcherDeadExchange");  //死信队列
+            queueArgs.put("x-message-ttl", 10000);     // 消息超时：让发布的message在队列中可以存活多长时间，以毫秒为单位。
+            queueArgs.put("x-expires", 1000);          // 队列超时：当前的queue在指定的时间内，没有消费者订阅就会被删除，以毫秒为单位。
+            queueArgs.put("x-max-length", 100);        // 队列最大长度：当超过了这个大小的时候，会删除之前最早插入的消息为本次的留出空间。
+            queueArgs.put("x-queue-mode", "lazy");     //延迟加载：queue的信息尽可能的都保存在磁盘上，仅在有消费者订阅的时候才会加载到RAM中。
+            */
+            channel.queueDeclare(userId, false, false, true, null);
+            channel.queueBind(userId, EX_CHANGE_SINGLE, userId);
+            //---
+            //创建群聊路由
+            //用户队列 绑定 群聊路由
+            channel.exchangeDeclare(groupId, BuiltinExchangeType.FANOUT, false, true , null);
+            channel.queueBind(userId, groupId, "");
+            //---
+            //创建用户消费者-（多端消费，pc，mobile）
+            //用户队列 绑定 用户消费者
+            this.consumeStart(ioSession);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("Mina open RabbitMQ Exception: {}", e.getStackTrace());
+            flag = false;
+        }
+        return flag;
+    }
+
+    /**
+     * 关闭RabbitMQ链接
+     * @param ioSession
+     * @return
+     */
+    public boolean close(IoSession ioSession){
+        boolean flag = true;
+        try {
+            this.consumeEnd(ioSession);
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("Mina close RabbitMQ Exception: {}", e.getStackTrace());
+        }
+        return flag;
+    }
     //开始消费消息
-    public void consumeStart(final IoSession ioSession, String userId) throws Exception{
-        channel.basicConsume(userId, false, "consumer_"+ userId,
+    private void consumeStart(final IoSession ioSession) throws Exception{
+        String userId = ioSession.getAttribute("uid" ).toString();
+        String type = ioSession.getAttribute("type" ).toString();
+        String consumerTag = type+"-"+userId;
+        channel.basicConsume(userId, false, consumerTag,
                 new DefaultConsumer(channel) {
                     @Override
                     public void handleDelivery(String consumerTag, Envelope envelope,
@@ -89,57 +145,33 @@ public class RabbitMQUtil {
                         try {
                             IMMessage imMessage = (IMMessage)new ObjectInputStream(new ByteArrayInputStream(body)).readObject();
                             ioSession.write(imMessage);
+                            //消息确认
                             channel.basicAck(envelope.getDeliveryTag(), false);
                         } catch (Exception e) {
                             e.printStackTrace();
+                            logger.error("Mina open RabbitMQ-consumeStart Exception: {}", e.getStackTrace());
                         }
-                        //消息确认
+
                     }
                 });
     }
     //结束消费
-    public void consumeEnd(String userId) throws Exception{
-        channel.basicCancel("consumer_"+userId);
-        logger.info("注销消费者: consumer_{}", userId);
-    }
-    //创建单聊
-    public void createSingle() throws Exception{
-        channel.exchangeDeclare(EX_CHANGE_SINGLE, BuiltinExchangeType.TOPIC, true);
-    }
-    //创建群组
-    public void createGroup(String groupId) throws Exception{
-        channel.exchangeDeclare(groupId, BuiltinExchangeType.FANOUT, true);
-    }
-    //创建用户
-    public void createUser(String userId) throws Exception{
-        //创建队列的参数
-        /*
-        Map<String, Object> queueArgs = new HashMap<String, Object>();
-        queueArgs.put("x-dead-letter-exchange", "refreshDispatcherDeadExchange");  //死信队列
-        queueArgs.put("x-message-ttl", 10000);     // 消息超时：让发布的message在队列中可以存活多长时间，以毫秒为单位。
-        queueArgs.put("x-expires", 1000);          // 队列超时：当前的queue在指定的时间内，没有消费者订阅就会被删除，以毫秒为单位。
-        queueArgs.put("x-max-length", 100);        // 队列最大长度：当超过了这个大小的时候，会删除之前最早插入的消息为本次的留出空间。
-        queueArgs.put("x-queue-mode", "lazy");     //延迟加载：queue的信息尽可能的都保存在磁盘上，仅在有消费者订阅的时候才会加载到RAM中。
-        */
-       channel.queueDeclare(userId, true, false, false, null);
-    }
-    //绑定单聊
-    public void joinSingle(String userId) throws Exception{
-        channel.queueBind(userId, EX_CHANGE_SINGLE, userId);
-    }
-    //加入群成员
-    public void joinGroup(String groupId, String userId) throws Exception{
-        channel.queueBind(userId, groupId, "");
+    private void consumeEnd(IoSession ioSession) throws Exception{
+        String consumerTag = new StringBuffer(
+                ioSession.getAttribute("type" ) + "-" +
+                        ioSession.getAttribute("uid" )).toString();
+        channel.basicCancel(consumerTag);
+        logger.info("注销消费者: {}", consumerTag);
     }
     //移除群成员
     public void removeGroup(String groupId, String userId) throws Exception{
         channel.queueUnbind(userId, groupId, "");
     }
-    //删除群，路由
+    //删除群聊路由
     public void delGroup(String groupId) throws Exception{
         channel.exchangeDelete(groupId, true);
     }
-    //删除用户，队列
+    //删除用户队列
     public void  delUser(String userId) throws Exception{
         channel.queueDelete(userId);
     }

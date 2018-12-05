@@ -51,7 +51,8 @@ public class MinaClient {
             future.awaitUninterruptibly();
             IoSession session = future.getSession();
             OpenMessage openMessage = new OpenMessage();
-            openMessage.setUid("user2");
+            openMessage.setUid("user1");
+            openMessage.setType("mobile");
             openMessage.setDate(new Date());
             session.write(openMessage);
 

@@ -12,6 +12,7 @@ import java.util.Date;
 public class OpenMessage implements Serializable {
     private static final long serialVersionUID = 9141815410261662360L;
     private String uid;
+    private String type;
     private Date date;
 
     public String getUid() {
@@ -20,6 +21,14 @@ public class OpenMessage implements Serializable {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Date getDate() {
@@ -34,6 +43,7 @@ public class OpenMessage implements Serializable {
     public String toString() {
         return "OpenMessage{" +
                 "uid='" + uid + '\'' +
+                ", type='" + type + '\'' +
                 ", date=" + date +
                 '}';
     }

@@ -37,9 +37,8 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
     @Override
     public void sessionClosed(IoSession session) throws Exception {
         super.sessionClosed(session);
-
-        logger.info("sessionClosed: userId: {} - sessionCount: {}", session.getId(), session.getService().getManagedSessionCount());
-        rabbitMQUtil.consumeEnd(""+session.getId());
+        rabbitMQUtil.close(session);
+        logger.info("sessionClosed: userId: {} - sessionCount: {}", session.getAttribute("uid").toString(), session.getService().getManagedSessionCount());
     }
 
     @Override
@@ -52,7 +51,12 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-        super.exceptionCaught(session, cause);
+        //super.exceptionCaught(session, cause);
+        logger.info("exceptionCaught: userId: {} - sessionCount: {} - 异常: ",
+                session.getAttribute("uid").toString(),
+                session.getService().getManagedSessionCount(),
+                cause);
+
     }
 
     @Override
@@ -60,23 +64,16 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
         super.messageReceived(session, message);
         if(message instanceof IMMessage){
             rabbitMQUtil.send((IMMessage)message);
-
             logger.info("messageReceived-im: {}", ((IMMessage)message).toString());
         }else if(message instanceof OpenMessage){
             session.setAttribute("uid", ((OpenMessage)message).getUid());
+            session.setAttribute("type", ((OpenMessage)message).getType());
             String uid = session.getAttribute("uid").toString();
-
-            rabbitMQUtil.createSingle();
-            rabbitMQUtil.createUser(uid);
-            rabbitMQUtil.joinSingle(uid);
-            rabbitMQUtil.createGroup("group1");
-            rabbitMQUtil.joinGroup("group1", uid);
-            rabbitMQUtil.consumeStart(session, uid);
-
-            logger.info("messageReceived-open: {}", uid);
+            rabbitMQUtil.open(session);
+            logger.info("messageReceived-open: type - {}, uid - {}",
+                    ((OpenMessage)message).getType(), uid);
         }else if(message instanceof CloseMessage){
             session.closeOnFlush();
-
             logger.info("messageReceived-close: {}", ((CloseMessage)message).getUid());
         }
     }
