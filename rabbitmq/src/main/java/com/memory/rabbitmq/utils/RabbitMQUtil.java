@@ -115,13 +115,13 @@ public class RabbitMQUtil {
 
     /**
      * 关闭RabbitMQ链接
-     * @param ioSession
+     * @param consumerTag
      * @return
      */
-    public boolean close(IoSession ioSession){
+    public boolean close(String consumerTag){
         boolean flag = true;
         try {
-            this.consumeEnd(ioSession);
+            this.consumeEnd(consumerTag);
         } catch (Exception e) {
             e.printStackTrace();
             logger.error("Mina close RabbitMQ Exception: {}", e.getStackTrace());
@@ -131,8 +131,10 @@ public class RabbitMQUtil {
     //开始消费消息
     private void consumeStart(final IoSession ioSession) throws Exception{
         String userId = ioSession.getAttribute("uid" ).toString();
-        String type = ioSession.getAttribute("type" ).toString();
-        String consumerTag = type+"-"+userId;
+        String consumerTag = new StringBuffer(
+                ioSession.getAttribute("type" ) + "-" +
+                        ioSession.getAttribute("uid" )).toString();
+        channel.basicQos(1);
         channel.basicConsume(userId, false, consumerTag,
                 new DefaultConsumer(channel) {
                     @Override
@@ -156,10 +158,7 @@ public class RabbitMQUtil {
                 });
     }
     //结束消费
-    private void consumeEnd(IoSession ioSession) throws Exception{
-        String consumerTag = new StringBuffer(
-                ioSession.getAttribute("type" ) + "-" +
-                        ioSession.getAttribute("uid" )).toString();
+    private void consumeEnd(String consumerTag) throws Exception{
         channel.basicCancel(consumerTag);
         logger.info("注销消费者: {}", consumerTag);
     }

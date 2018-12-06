@@ -37,14 +37,12 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
     @Override
     public void sessionClosed(IoSession session) throws Exception {
         super.sessionClosed(session);
-        rabbitMQUtil.close(session);
-        logger.info("sessionClosed: userId: {} - sessionCount: {}", session.getAttribute("uid").toString(), session.getService().getManagedSessionCount());
+        clearRabbitMQ(session);
     }
 
     @Override
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
         super.sessionIdle(session, status);
-
         logger.info("sessionIdle-心跳请求超时: userId: {} - sessionCount: {}", session.getId(), session.getService().getManagedSessionCount());
         session.closeOnFlush();
     }
@@ -56,30 +54,62 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
                 session.getAttribute("uid").toString(),
                 session.getService().getManagedSessionCount(),
                 cause);
-
     }
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
         super.messageReceived(session, message);
+        doRabbitMQ(session, message);
+    }
+
+    @Override
+    public void messageSent(IoSession session, Object message) throws Exception {
+        super.messageSent(session, message);
+    }
+
+    private void doRabbitMQ(IoSession session, Object message) throws Exception {
         if(message instanceof IMMessage){
             rabbitMQUtil.send((IMMessage)message);
             logger.info("messageReceived-im: {}", ((IMMessage)message).toString());
         }else if(message instanceof OpenMessage){
-            session.setAttribute("uid", ((OpenMessage)message).getUid());
-            session.setAttribute("type", ((OpenMessage)message).getType());
-            String uid = session.getAttribute("uid").toString();
-            rabbitMQUtil.open(session);
-            logger.info("messageReceived-open: type - {}, uid - {}",
-                    ((OpenMessage)message).getType(), uid);
+            OpenMessage openMessage = (OpenMessage) message;
+            String consumerTag = new StringBuffer(openMessage.getType()
+                    + "-" + openMessage.getUid()).toString();
+            if(!MinaSessionMap.getMap().containsKey(consumerTag)){
+                openPut(session, openMessage, consumerTag);
+                logger.info("messageReceived-open: {}", consumerTag);
+            }else{
+                session.write("repeat con");
+                session.closeOnFlush();
+                logger.info("messageReceived-open-exist: {}", consumerTag);
+            }
         }else if(message instanceof CloseMessage){
             session.closeOnFlush();
             logger.info("messageReceived-close: {}", ((CloseMessage)message).getUid());
         }
     }
 
-    @Override
-    public void messageSent(IoSession session, Object message) throws Exception {
-        super.messageSent(session, message);
+    private void clearRabbitMQ(IoSession session) {
+        if(session.getAttribute("uid")!=null){
+            closeRemove(session);
+        }
+        logger.info("sessionClosed: userId: {} - sessionCount: {}", session.getAttribute("uid"), session.getService().getManagedSessionCount());
+    }
+
+    private void openPut(IoSession session, OpenMessage openMessage, String consumerTag) {
+        session.setAttribute("uid", openMessage.getUid());
+        session.setAttribute("type", openMessage.getType());
+        MinaSessionMap.getMap().put(consumerTag, session);
+        rabbitMQUtil.open(session);
+    }
+
+    private void closeRemove(IoSession session) {
+        String consumerTag = new StringBuffer(
+                session.getAttribute("type" ) + "-" +
+                        session.getAttribute("uid" )).toString();
+        MinaSessionMap.getMap().remove(consumerTag);
+        rabbitMQUtil.close(consumerTag);
+        logger.info("MinaSessionMap = {}", MinaSessionMap.getMap().size());
+
     }
 }

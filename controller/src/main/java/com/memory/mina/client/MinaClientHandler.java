@@ -29,7 +29,7 @@ public class MinaClientHandler extends IoHandlerAdapter {
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
-        //logger.info("client-sessionClosed");
+        logger.info("client-sessionClosed");
         super.sessionClosed(session);
     }
 
@@ -41,7 +41,7 @@ public class MinaClientHandler extends IoHandlerAdapter {
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-        //logger.info("client-exceptionCaught");
+        logger.info("client-exceptionCaught");
         super.exceptionCaught(session, cause);
     }
 
