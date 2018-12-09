@@ -1,6 +1,7 @@
 package com.memory.mina.client;
 
-import com.memory.rabbitmq.entity.IMMessage;
+import com.memory.mina.entity.IMMessage;
+import com.memory.mina.entity.SysMessage;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
@@ -17,25 +18,21 @@ public class MinaClientHandler extends IoHandlerAdapter {
 
     @Override
     public void sessionCreated(IoSession session) throws Exception {
-        //logger.info("client-sessionCreated");
         super.sessionCreated(session);
     }
 
     @Override
     public void sessionOpened(IoSession session) throws Exception {
-        //logger.info("client-sessionOpened");
         super.sessionOpened(session);
     }
 
     @Override
     public void sessionClosed(IoSession session) throws Exception {
-        logger.info("client-sessionClosed");
         super.sessionClosed(session);
     }
 
     @Override
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
-        //logger.info("client-sessionIdle");
         super.sessionIdle(session, status);
     }
 
@@ -47,19 +44,18 @@ public class MinaClientHandler extends IoHandlerAdapter {
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
-        //logger.info("client-messageReceived: {}", message.toString());
         super.messageReceived(session, message);
         if(message instanceof IMMessage){
             logger.info("IMMessage: {}", ((IMMessage)message).getContent());
-        }else{
+        }else if(message instanceof SysMessage){
+            logger.info("SysMessage: {}", ((SysMessage)message).getContent());
+        }else {
             logger.info("heartbeat: {}", message.toString());
         }
     }
 
     @Override
     public void messageSent(IoSession session, Object message) throws Exception {
-        //logger.info("client-messageSent: {}", message.toString());
         super.messageSent(session, message);
-
     }
 }

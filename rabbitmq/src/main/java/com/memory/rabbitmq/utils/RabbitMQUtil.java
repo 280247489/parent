@@ -1,6 +1,5 @@
 package com.memory.rabbitmq.utils;
 
-import com.memory.rabbitmq.entity.IMMessage;
 import com.rabbitmq.client.*;
 import org.apache.mina.core.session.IoSession;
 import org.slf4j.Logger;
@@ -56,19 +55,22 @@ public class RabbitMQUtil {
         rabbitTemplate.convertAndSend("group1", "", msg, correlationData);
         return true;
     }
+
     /**
      * 发送消息
-     * @param imMessage
+     * @param type
+     * @param toId
+     * @param msg
      * @return
      * @throws Exception
      */
-    public Boolean send(IMMessage imMessage) throws Exception{
+    public Boolean send(String type, String toId, Object msg) throws Exception{
         CorrelationData correlationData = new CorrelationData();
-        correlationData.setId(imMessage.getId());
+        //correlationData.setId();
         rabbitTemplate.convertAndSend(
-                imMessage.getToType().toLowerCase().equals("single") ? EX_CHANGE_SINGLE : imMessage.getToId(),
-                imMessage.getToType().toLowerCase().equals("single") ? imMessage.getToId() : "",
-                imMessage, correlationData);
+                type.toLowerCase().equals("single") ? EX_CHANGE_SINGLE : toId,
+                type.toLowerCase().equals("single") ? toId : "",
+                msg, correlationData);
         return true;
     }
 
@@ -131,6 +133,7 @@ public class RabbitMQUtil {
     //开始消费消息
     private void consumeStart(final IoSession ioSession) throws Exception{
         String userId = ioSession.getAttribute("uid" ).toString();
+        String type = ioSession.getAttribute("type" ).toString();
         String consumerTag = new StringBuffer(
                 ioSession.getAttribute("type" ) + "-" +
                         ioSession.getAttribute("uid" )).toString();
@@ -145,10 +148,13 @@ public class RabbitMQUtil {
                         //String message = new String(body, "UTF-8");
                         //消息处理（自己实现的方法）
                         try {
-                            IMMessage imMessage = (IMMessage)new ObjectInputStream(new ByteArrayInputStream(body)).readObject();
+                            Object imMessage = new ObjectInputStream(new ByteArrayInputStream(body)).readObject();
                             ioSession.write(imMessage);
-                            //消息确认
-                            channel.basicAck(envelope.getDeliveryTag(), false);
+                            if(type.equals("mobile")){
+                                //消息确认
+                                channel.basicAck(envelope.getDeliveryTag(), false);
+                            }
+
                         } catch (Exception e) {
                             e.printStackTrace();
                             logger.error("Mina open RabbitMQ-consumeStart Exception: {}", e.getStackTrace());

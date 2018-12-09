@@ -1,4 +1,4 @@
-package com.memory.rabbitmq.entity;
+package com.memory.mina.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,7 +17,7 @@ public class IMMessage implements Serializable {
     private String content;     //消息内容
     private Date date;          //消息发送时间
     private String from;        //发送人
-    private String toType;     //接受类型 group群，singel单聊
+    private String toType;     //接收类型 group群，singel单聊
     private String toId;          //接收人
 
     public String getId() {

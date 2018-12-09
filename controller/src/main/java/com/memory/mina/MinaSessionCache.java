@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date: 2018/11/24 0024 11:27
  * @Description:
  */
-public class MinaSessionMap {
+public class MinaSessionCache {
     private static Map<String, IoSession> map = new ConcurrentHashMap();
     public static Map<String, IoSession> getMap() {
         return map;

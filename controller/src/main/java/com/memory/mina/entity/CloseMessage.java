@@ -1,4 +1,4 @@
-package com.memory.rabbitmq.entity;
+package com.memory.mina.entity;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -2,8 +2,9 @@
 <configuration scan="true" scanPeriod="60 seconds" debug="false">
 
     <contextName>logback-dev</contextName>
-    <property name="logback.log.dir" value="logback/parent/logs"/>
     <property name="logback.app.name" value="parent"/>
+    <property name="logback.log.dir" value="logback/logs"/>
+
 
     <!-- 彩色日志 -->
     <!-- 彩色日志依赖的渲染类 -->

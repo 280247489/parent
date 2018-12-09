@@ -1,12 +1,14 @@
 package com.memory.mina;
 
-import com.memory.rabbitmq.entity.CloseMessage;
-import com.memory.rabbitmq.entity.IMMessage;
-import com.memory.rabbitmq.entity.OpenMessage;
+import com.memory.mina.entity.CloseMessage;
+import com.memory.mina.entity.IMMessage;
+import com.memory.mina.entity.OpenMessage;
+import com.memory.mina.entity.SysMessage;
 import com.memory.rabbitmq.utils.RabbitMQUtil;
 import org.apache.mina.core.service.IoHandlerAdapter;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
+import org.omg.PortableInterceptor.SYSTEM_EXCEPTION;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +28,6 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
     @Override
     public void sessionCreated(IoSession session) throws Exception {
         super.sessionCreated(session);
-        logger.info("sessionCreated: sessionCount: {}", session.getService().getManagedSessionCount());
      }
 
     @Override
@@ -37,29 +38,32 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
     @Override
     public void sessionClosed(IoSession session) throws Exception {
         super.sessionClosed(session);
-        clearRabbitMQ(session);
+        logger.info("sessionClosed: userId: {} - count: {} - cache: {}", session.getAttribute("uid"), session.getService().getManagedSessionCount(), MinaSessionCache.getMap().size());
     }
 
     @Override
     public void sessionIdle(IoSession session, IdleStatus status) throws Exception {
         super.sessionIdle(session, status);
-        logger.info("sessionIdle-心跳请求超时: userId: {} - sessionCount: {}", session.getId(), session.getService().getManagedSessionCount());
-        session.closeOnFlush();
+        String consumerTag = new StringBuffer(session.getAttribute("type")
+                + "-" + session.getAttribute("uid")).toString();
+        logger.info("sessionIdle-心跳请求超时: userId: {} ", consumerTag);
+        doSessionClose(session);
     }
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-        //super.exceptionCaught(session, cause);
-        logger.info("exceptionCaught: userId: {} - sessionCount: {} - 异常: ",
-                session.getAttribute("uid").toString(),
-                session.getService().getManagedSessionCount(),
-                cause);
+        super.exceptionCaught(session, cause);
+        String consumerTag = new StringBuffer(session.getAttribute("type")
+                + "-" + session.getAttribute("uid")).toString();
+        logger.info("exceptionCaught: userId: {}", consumerTag);
+        doSessionClose(session);
     }
 
     @Override
     public void messageReceived(IoSession session, Object message) throws Exception {
         super.messageReceived(session, message);
-        doRabbitMQ(session, message);
+        //处理客户端消息
+        doMessage(session, message);
     }
 
     @Override
@@ -67,49 +71,58 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
         super.messageSent(session, message);
     }
 
-    private void doRabbitMQ(IoSession session, Object message) throws Exception {
+    private void doMessage(IoSession session, Object message) throws Exception {
         if(message instanceof IMMessage){
-            rabbitMQUtil.send((IMMessage)message);
-            logger.info("messageReceived-im: {}", ((IMMessage)message).toString());
+            doIMMessage((IMMessage) message);
         }else if(message instanceof OpenMessage){
-            OpenMessage openMessage = (OpenMessage) message;
-            String consumerTag = new StringBuffer(openMessage.getType()
-                    + "-" + openMessage.getUid()).toString();
-            if(!MinaSessionMap.getMap().containsKey(consumerTag)){
-                openPut(session, openMessage, consumerTag);
-                logger.info("messageReceived-open: {}", consumerTag);
-            }else{
-                session.write("repeat con");
-                session.closeOnFlush();
-                logger.info("messageReceived-open-exist: {}", consumerTag);
-            }
+            doOpenMessage(session, (OpenMessage) message);
         }else if(message instanceof CloseMessage){
-            session.closeOnFlush();
-            logger.info("messageReceived-close: {}", ((CloseMessage)message).getUid());
+            doCloseMessage(session, (CloseMessage) message);
         }
     }
 
-    private void clearRabbitMQ(IoSession session) {
-        if(session.getAttribute("uid")!=null){
-            closeRemove(session);
-        }
-        logger.info("sessionClosed: userId: {} - sessionCount: {}", session.getAttribute("uid"), session.getService().getManagedSessionCount());
+    private void doIMMessage(IMMessage message) throws Exception {
+        IMMessage imMessage = message;
+        logger.info("messageReceived-imMessage");
+        //发送消息
+        rabbitMQUtil.send(imMessage.getToType(), imMessage.getToId(), imMessage);
     }
 
-    private void openPut(IoSession session, OpenMessage openMessage, String consumerTag) {
+    private void doOpenMessage(IoSession session, OpenMessage message) {
+        OpenMessage openMessage = message;
+        String consumerTag = new StringBuffer(openMessage.getType()
+                + "-" + openMessage.getUid()).toString();
+        if(MinaSessionCache.getMap().containsKey(consumerTag)){
+            IoSession oldIoSession = MinaSessionCache.getMap().get(consumerTag);
+            SysMessage sysMessage = new SysMessage();
+            sysMessage.setSysType("exit");
+            sysMessage.setContent("账户另一地点登录，强制退出。如非本人操作，请联系管理员！");
+            oldIoSession.write(sysMessage);
+            //处理关闭ioSession
+            doSessionClose(oldIoSession);
+        }
         session.setAttribute("uid", openMessage.getUid());
         session.setAttribute("type", openMessage.getType());
-        MinaSessionMap.getMap().put(consumerTag, session);
+        MinaSessionCache.getMap().put(consumerTag, session);
+        //处理消息，如RabbitMQ，需要创建绑定消费者
         rabbitMQUtil.open(session);
+        logger.info("messageReceived-openMessage: {}", consumerTag);
     }
 
-    private void closeRemove(IoSession session) {
+    private void doCloseMessage(IoSession session, CloseMessage message) {
+        CloseMessage closeMessage = message;
+        //处理关闭ioSession
+        doSessionClose(session);
+        logger.info("messageReceived-close: {}", session.getAttribute("uid"));
+    }
+
+    private void doSessionClose(IoSession session) {
+        //处理RabbitMQ消费者
         String consumerTag = new StringBuffer(
                 session.getAttribute("type" ) + "-" +
                         session.getAttribute("uid" )).toString();
-        MinaSessionMap.getMap().remove(consumerTag);
+        MinaSessionCache.getMap().remove(consumerTag);
+        session.closeOnFlush();
         rabbitMQUtil.close(consumerTag);
-        logger.info("MinaSessionMap = {}", MinaSessionMap.getMap().size());
-
     }
 }

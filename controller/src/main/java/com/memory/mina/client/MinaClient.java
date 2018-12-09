@@ -1,22 +1,19 @@
 package com.memory.mina.client;
 
 import com.memory.common.utils.Utils;
-import com.memory.rabbitmq.entity.IMMessage;
-import com.memory.rabbitmq.entity.OpenMessage;
+import com.memory.mina.entity.IMMessage;
+import com.memory.mina.entity.OpenMessage;
 import org.apache.mina.core.future.ConnectFuture;
 import org.apache.mina.core.service.IoConnector;
 import org.apache.mina.core.session.IdleStatus;
 import org.apache.mina.core.session.IoSession;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
-import org.apache.mina.filter.codec.prefixedstring.PrefixedStringCodecFactory;
 import org.apache.mina.filter.codec.serialization.ObjectSerializationCodecFactory;
 import org.apache.mina.filter.keepalive.KeepAliveFilter;
-import org.apache.mina.filter.keepalive.KeepAliveRequestTimeoutHandler;
 import org.apache.mina.filter.logging.LoggingFilter;
 import org.apache.mina.transport.socket.nio.NioSocketConnector;
 
 import java.net.InetSocketAddress;
-import java.nio.charset.Charset;
 import java.util.Date;
 import java.util.Scanner;
 
@@ -37,7 +34,7 @@ public class MinaClient {
             connector.setHandler(new MinaClientHandler());
             connector.getFilterChain().addLast("codec", new ProtocolCodecFilter(
                     new ObjectSerializationCodecFactory()));
-            //connector.getFilterChain().addLast("logger", new LoggingFilter());
+            connector.getFilterChain().addLast("logger", new LoggingFilter());
 
             KeepAliveFilter heartBeat = new KeepAliveFilter(new MinaClientKeepAliveMessage(), IdleStatus.WRITER_IDLE,
                     new MinaClientKeepAliveRequestTimeoutHandler());
