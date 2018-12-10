@@ -38,7 +38,17 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
     @Override
     public void sessionClosed(IoSession session) throws Exception {
         super.sessionClosed(session);
-        logger.info("sessionClosed: userId: {} - count: {} - cache: {}", session.getAttribute("uid"), session.getService().getManagedSessionCount(), MinaSessionCache.getMap().size());
+        String consumerTag = new StringBuffer(
+                session.getAttribute("type" ) + "-" +
+                        session.getAttribute("uid" )).toString();
+        if(!"repeat".equals(session.getAttribute("closeInfo"))){
+            doSessionClosed(consumerTag);
+        }
+        logger.info("sessionClosed: info: {} - userId: {} - count: {} - cache: {}",
+                session.getAttribute("closeInfo"),
+                consumerTag,
+                session.getService().getManagedSessionCount(),
+                MinaSessionCache.getMap().size());
     }
 
     @Override
@@ -46,8 +56,9 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
         super.sessionIdle(session, status);
         String consumerTag = new StringBuffer(session.getAttribute("type")
                 + "-" + session.getAttribute("uid")).toString();
-        logger.info("sessionIdle-心跳请求超时: userId: {} ", consumerTag);
-        doSessionClose(session);
+//        logger.info("sessionIdle-心跳请求超时: userId: {} ", consumerTag);
+        session.setAttribute("closeInfo", "sessionIdle");
+        session.closeOnFlush();
     }
 
     @Override
@@ -55,8 +66,9 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
         super.exceptionCaught(session, cause);
         String consumerTag = new StringBuffer(session.getAttribute("type")
                 + "-" + session.getAttribute("uid")).toString();
-        logger.info("exceptionCaught: userId: {}", consumerTag);
-        doSessionClose(session);
+//        logger.info("exceptionCaught: userId: {}", consumerTag);
+        session.setAttribute("closeInfo", "exceptionCaught");
+        session.closeOnFlush();
     }
 
     @Override
@@ -99,7 +111,9 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
             sysMessage.setContent("账户另一地点登录，强制退出。如非本人操作，请联系管理员！");
             oldIoSession.write(sysMessage);
             //处理关闭ioSession
-            doSessionClose(oldIoSession);
+            oldIoSession.setAttribute("closeInfo", "repeat");
+            doSessionClosed(consumerTag);
+            oldIoSession.closeOnFlush();
         }
         session.setAttribute("uid", openMessage.getUid());
         session.setAttribute("type", openMessage.getType());
@@ -112,17 +126,13 @@ public class MinaServerIoHandler extends IoHandlerAdapter {
     private void doCloseMessage(IoSession session, CloseMessage message) {
         CloseMessage closeMessage = message;
         //处理关闭ioSession
-        doSessionClose(session);
-        logger.info("messageReceived-close: {}", session.getAttribute("uid"));
+        session.setAttribute("closeInfo", "closeMessage");
+        session.closeOnFlush();
     }
 
-    private void doSessionClose(IoSession session) {
-        //处理RabbitMQ消费者
-        String consumerTag = new StringBuffer(
-                session.getAttribute("type" ) + "-" +
-                        session.getAttribute("uid" )).toString();
+    private void doSessionClosed(String consumerTag) {
+        //处理cache以及RabbitMQ消费者
         MinaSessionCache.getMap().remove(consumerTag);
-        session.closeOnFlush();
         rabbitMQUtil.close(consumerTag);
     }
 }

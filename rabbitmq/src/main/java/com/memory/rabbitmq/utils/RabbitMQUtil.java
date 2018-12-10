@@ -109,7 +109,7 @@ public class RabbitMQUtil {
             this.consumeStart(ioSession);
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("Mina open RabbitMQ Exception: {}", e.getStackTrace());
+            logger.error("Mina open RabbitMQ Exception: {}", e.getStackTrace().toString());
             flag = false;
         }
         return flag;
@@ -125,8 +125,9 @@ public class RabbitMQUtil {
         try {
             this.consumeEnd(consumerTag);
         } catch (Exception e) {
+            flag = false;
             e.printStackTrace();
-            logger.error("Mina close RabbitMQ Exception: {}", e.getStackTrace());
+            logger.error("Mina close RabbitMQ Exception: {}", e.getStackTrace().toString());
         }
         return flag;
     }
@@ -157,11 +158,12 @@ public class RabbitMQUtil {
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            logger.error("Mina open RabbitMQ-consumeStart Exception: {}", e.getStackTrace());
+                            logger.error("Mina open RabbitMQ-consumeStart Exception: {}", e.getStackTrace().toString());
                         }
 
                     }
                 });
+        logger.info("注册消费者: {}", consumerTag);
     }
     //结束消费
     private void consumeEnd(String consumerTag) throws Exception{
