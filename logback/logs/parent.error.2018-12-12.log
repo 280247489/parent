@@ -1,0 +1,2 @@
+2018-12-12 14:27:29,765 [AMQP Connection 127.0.0.1:5672] ERROR o.s.a.r.c.CachingConnectionFactory 1424 - Channel shutdown: channel error; protocol method: #method<channel.close>(reply-code=404, reply-text=NOT_FOUND - no exchange 'group1' in vhost '/', class-id=60, method-id=40)
+2018-12-12 15:20:40,469 [NioProcessor-2] ERROR c.memory.rabbitmq.utils.RabbitMQUtil 130 - Mina close RabbitMQ Exception: [Ljava.lang.StackTraceElement;@18c97938

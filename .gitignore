@@ -1,4 +1,9 @@
-/target/
+/common/target/
+/controller/target/
+/domain/target/
+/rabbitmq/target/
+/redis/target/
+/service/target/
 !.mvn/wrapper/maven-wrapper.jar
 
 ### STS ###

@@ -1,9 +1,13 @@
 #MySQL
 spring:
+  jpa:
+    hibernate:
+      ddl-auto: update #自动更新
+    show-sql: false #日志中显示sql语句
   datasource:
     c3p0:
       driverClass: com.mysql.cj.jdbc.Driver
-      jdbcUrl: jdbc:mysql://localhost:3306/demo_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT
+      jdbcUrl: jdbc:mysql://localhost:3306/parent_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT%2b8
       user: root
       password: rootroot
       minPoolSize: 10

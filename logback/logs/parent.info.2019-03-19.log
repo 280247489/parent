@@ -1,0 +1,115 @@
+2019-03-19 15:54:42,228 [main] INFO  com.memory.MainApplication 50 - Starting MainApplication on PC-Memory with PID 6672 (E:\IdeaProjects\parent\controller\target\classes started by Administrator in E:\IdeaProjects\parent)
+2019-03-19 15:54:42,244 [main] INFO  com.memory.MainApplication 679 - The following profiles are active: c3p0,rabbitmq
+2019-03-19 15:54:43,509 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 244 - Multiple Spring Data modules found, entering strict repository configuration mode!
+2019-03-19 15:54:43,509 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 126 - Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-03-19 15:54:43,619 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 182 - Finished Spring Data repository scanning in 94ms. Found 1 repository interfaces.
+2019-03-19 15:54:43,634 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 244 - Multiple Spring Data modules found, entering strict repository configuration mode!
+2019-03-19 15:54:43,634 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 126 - Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-03-19 15:54:43,681 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport 363 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.memory.domain.repository.DemoRepository.
+2019-03-19 15:54:43,681 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 182 - Finished Spring Data repository scanning in 0ms. Found 0 repository interfaces.
+2019-03-19 15:54:44,137 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker 330 - Bean 'org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration' of type [org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration$$EnhancerBySpringCGLIB$$f22fadca] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-03-19 15:54:44,203 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker 330 - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$2bc3ef9c] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-03-19 15:54:44,629 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer 90 - Tomcat initialized with port(s): 8080 (http)
+2019-03-19 15:54:44,645 [main] INFO  o.a.coyote.http11.Http11NioProtocol 173 - Initializing ProtocolHandler ["http-nio-8080"]
+2019-03-19 15:54:44,645 [main] INFO  o.a.catalina.core.StandardService 173 - Starting service [Tomcat]
+2019-03-19 15:54:44,645 [main] INFO  o.a.catalina.core.StandardEngine 173 - Starting Servlet Engine: Apache Tomcat/9.0.12
+2019-03-19 15:54:44,660 [main] INFO  o.a.c.core.AprLifecycleListener 173 - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [E:\Java\jdk1.8.0_131\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\NetSarang;E:\NetSarang\Xshell 6\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;E:\TortoiseSVN\bin;E:\Java\jdk1.8.0_131\bin;E:\Java\jdk1.8.0_131\jre\bin;E:\maven-3.5.3\bin;E:\Git\cmd;E:\SSH Communications Security\SSH Secure Shell;C:\Users\Administrator\AppData\Local\GitHubDesktop\bin;.]
+2019-03-19 15:54:44,785 [main] INFO  o.a.c.c.C.[.[localhost].[/parent] 173 - Initializing Spring embedded WebApplicationContext
+2019-03-19 15:54:44,785 [main] INFO  o.s.web.context.ContextLoader 285 - Root WebApplicationContext: initialization completed in 2384 ms
+2019-03-19 15:54:44,833 [main] INFO  o.s.b.w.s.ServletRegistrationBean 186 - Servlet dispatcherServlet mapped to [/]
+2019-03-19 15:54:44,843 [main] INFO  o.s.b.w.s.FilterRegistrationBean 248 - Mapping filter: 'characterEncodingFilter' to: [/*]
+2019-03-19 15:54:44,843 [main] INFO  o.s.b.w.s.FilterRegistrationBean 248 - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2019-03-19 15:54:44,844 [main] INFO  o.s.b.w.s.FilterRegistrationBean 248 - Mapping filter: 'formContentFilter' to: [/*]
+2019-03-19 15:54:44,844 [main] INFO  o.s.b.w.s.FilterRegistrationBean 248 - Mapping filter: 'requestContextFilter' to: [/*]
+2019-03-19 15:54:44,844 [main] INFO  o.s.b.w.s.FilterRegistrationBean 248 - Mapping filter: 'demoFilter' to: [/*]
+2019-03-19 15:54:44,885 [main] INFO  c.m.d.c3p0.DatasourceConfiguration 29 - com.mchange.v2.c3p0.ComboPooledDataSource.class
+2019-03-19 15:54:44,916 [MLog-Init-Reporter] INFO  com.mchange.v2.log.MLog 212 - MLog clients using slf4j logging.
+2019-03-19 15:54:45,061 [main] INFO  com.mchange.v2.c3p0.C3P0Registry 212 - Initializing c3p0-0.9.5.2 [built 08-December-2015 22:06:04 -0800; debug? true; trace: 10]
+2019-03-19 15:54:45,379 [main] INFO  c.m.v.c.i.AbstractPoolBackedDataSource 212 - Initializing c3p0 pool... com.mchange.v2.c3p0.ComboPooledDataSource [ acquireIncrement -> 5, acquireRetryAttempts -> 30, acquireRetryDelay -> 1000, autoCommitOnClose -> false, automaticTestTable -> null, breakAfterAcquireFailure -> false, checkoutTimeout -> 0, connectionCustomizerClassName -> null, connectionTesterClassName -> com.mchange.v2.c3p0.impl.DefaultConnectionTester, contextClassLoaderSource -> caller, dataSourceName -> 1hge18aa115brwpl1eqelo2|4f966719, debugUnreturnedConnectionStackTraces -> false, description -> null, driverClass -> com.mysql.cj.jdbc.Driver, extensions -> {}, factoryClassLocation -> null, forceIgnoreUnresolvedTransactions -> false, forceSynchronousCheckins -> false, forceUseNamedDriverClass -> false, identityToken -> 1hge18aa115brwpl1eqelo2|4f966719, idleConnectionTestPeriod -> 60, initialPoolSize -> 15, jdbcUrl -> jdbc:mysql://localhost:3306/demo_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT, maxAdministrativeTaskTime -> 0, maxConnectionAge -> 0, maxIdleTime -> 120, maxIdleTimeExcessConnections -> 0, maxPoolSize -> 20, maxStatements -> 1000, maxStatementsPerConnection -> 0, minPoolSize -> 10, numHelperThreads -> 3, preferredTestQuery -> null, privilegeSpawnedThreads -> false, properties -> {user=******, password=******}, propertyCycle -> 0, statementCacheNumDeferredCloseThreads -> 0, testConnectionOnCheckin -> false, testConnectionOnCheckout -> false, unreturnedConnectionTimeout -> 0, userOverrides -> {}, usesTraditionalReflectiveProxies -> false ]
+2019-03-19 15:54:45,775 [main] INFO  o.h.jpa.internal.util.LogHelper 31 - HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2019-03-19 15:54:46,014 [main] INFO  org.hibernate.Version 46 - HHH000412: Hibernate Core {5.3.7.Final}
+2019-03-19 15:54:46,014 [main] INFO  org.hibernate.cfg.Environment 213 - HHH000206: hibernate.properties not found
+2019-03-19 15:54:46,367 [main] INFO  o.h.annotations.common.Version 49 - HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2019-03-19 15:54:46,802 [main] INFO  org.hibernate.dialect.Dialect 157 - HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+2019-03-19 15:54:48,180 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean 415 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2019-03-19 15:54:48,743 [main] INFO  o.s.a.r.c.CachingConnectionFactory 455 - Attempting to connect to: [127.0.0.1:5672]
+2019-03-19 15:54:48,790 [main] INFO  o.s.a.r.c.CachingConnectionFactory 491 - Created new connection: rabbitConnectionFactory#4c4c7d6c:0/SimpleConnection@74697863 [delegate=amqp://guest@127.0.0.1:5672/, localPort= 56819]
+2019-03-19 15:54:49,447 [main] INFO  com.memory.mina.MinaServer 59 - 
+mina-server-start: 9123
+2019-03-19 15:54:49,668 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor 171 - Initializing ExecutorService 'applicationTaskExecutor'
+2019-03-19 15:54:49,898 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration 234 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-03-19 15:54:49,958 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping 56 - Adding welcome page: class path resource [public/index.html]
+2019-03-19 15:54:50,399 [main] INFO  o.a.coyote.http11.Http11NioProtocol 173 - Starting ProtocolHandler ["http-nio-8080"]
+2019-03-19 15:54:50,399 [main] INFO  o.a.tomcat.util.net.NioSelectorPool 173 - Using a shared selector for servlet write/read
+2019-03-19 15:54:50,414 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer 204 - Tomcat started on port(s): 8080 (http) with context path '/parent'
+2019-03-19 15:54:50,430 [main] INFO  com.memory.MainApplication 59 - Started MainApplication in 9.014 seconds (JVM running for 10.651)
+2019-03-19 15:55:06,424 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[.[localhost].[/parent] 173 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-03-19 15:55:06,425 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet 521 - Initializing Servlet 'dispatcherServlet'
+2019-03-19 15:55:06,441 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet 543 - Completed initialization in 16 ms
+2019-03-19 15:55:06,467 [http-nio-8080-exec-1] INFO  com.memory.common.filter.DemoFilter 53 - ↓↓↓
+--------begin--------------------
+→ Request : GET | 0:0:0:0:0:0:0:1
+→ http://localhost:8080/parent/test
+→ null
+-------------------end-----------
+2019-03-19 15:55:06,483 [http-nio-8080-exec-1] INFO  com.memory.controller.DemoController 41 - 这是 label:dev-application
+2019-03-19 15:55:29,065 [main] INFO  com.memory.MainApplication 50 - Starting MainApplication on PC-Memory with PID 6836 (E:\IdeaProjects\parent\controller\target\classes started by Administrator in E:\IdeaProjects\parent)
+2019-03-19 15:55:29,081 [main] INFO  com.memory.MainApplication 679 - The following profiles are active: c3p0,rabbitmq
+2019-03-19 15:55:29,868 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 244 - Multiple Spring Data modules found, entering strict repository configuration mode!
+2019-03-19 15:55:29,869 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 126 - Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-03-19 15:55:29,939 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 182 - Finished Spring Data repository scanning in 64ms. Found 1 repository interfaces.
+2019-03-19 15:55:29,949 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 244 - Multiple Spring Data modules found, entering strict repository configuration mode!
+2019-03-19 15:55:29,950 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 126 - Bootstrapping Spring Data repositories in DEFAULT mode.
+2019-03-19 15:55:29,968 [main] INFO  o.s.d.r.c.RepositoryConfigurationExtensionSupport 363 - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.memory.domain.repository.DemoRepository.
+2019-03-19 15:55:29,968 [main] INFO  o.s.d.r.c.RepositoryConfigurationDelegate 182 - Finished Spring Data repository scanning in 11ms. Found 0 repository interfaces.
+2019-03-19 15:55:30,175 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker 330 - Bean 'org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration' of type [org.springframework.amqp.rabbit.annotation.RabbitBootstrapConfiguration$$EnhancerBySpringCGLIB$$ddf0b3d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-03-19 15:55:30,222 [main] INFO  o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker 330 - Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$47734d0f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2019-03-19 15:55:30,456 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer 90 - Tomcat initialized with port(s): 8080 (http)
+2019-03-19 15:55:30,471 [main] INFO  o.a.coyote.http11.Http11NioProtocol 173 - Initializing ProtocolHandler ["http-nio-8080"]
+2019-03-19 15:55:30,471 [main] INFO  o.a.catalina.core.StandardService 173 - Starting service [Tomcat]
+2019-03-19 15:55:30,471 [main] INFO  o.a.catalina.core.StandardEngine 173 - Starting Servlet Engine: Apache Tomcat/9.0.12
+2019-03-19 15:55:30,471 [main] INFO  o.a.c.core.AprLifecycleListener 173 - The APR based Apache Tomcat Native library which allows optimal performance in production environments was not found on the java.library.path: [E:\Java\jdk1.8.0_131\bin;C:\Windows\Sun\Java\bin;C:\Windows\system32;C:\Windows;C:\Program Files (x86)\Common Files\NetSarang;E:\NetSarang\Xshell 6\;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\ProgramData\Oracle\Java\javapath;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;E:\TortoiseSVN\bin;E:\Java\jdk1.8.0_131\bin;E:\Java\jdk1.8.0_131\jre\bin;E:\maven-3.5.3\bin;E:\Git\cmd;E:\SSH Communications Security\SSH Secure Shell;C:\Users\Administrator\AppData\Local\GitHubDesktop\bin;.]
+2019-03-19 15:55:30,581 [main] INFO  o.a.c.c.C.[.[localhost].[/parent] 173 - Initializing Spring embedded WebApplicationContext
+2019-03-19 15:55:30,581 [main] INFO  o.s.web.context.ContextLoader 285 - Root WebApplicationContext: initialization completed in 1469 ms
+2019-03-19 15:55:30,596 [main] INFO  o.s.b.w.s.ServletRegistrationBean 186 - Servlet dispatcherServlet mapped to [/]
+2019-03-19 15:55:30,596 [main] INFO  o.s.b.w.s.FilterRegistrationBean 248 - Mapping filter: 'characterEncodingFilter' to: [/*]
+2019-03-19 15:55:30,596 [main] INFO  o.s.b.w.s.FilterRegistrationBean 248 - Mapping filter: 'hiddenHttpMethodFilter' to: [/*]
+2019-03-19 15:55:30,596 [main] INFO  o.s.b.w.s.FilterRegistrationBean 248 - Mapping filter: 'formContentFilter' to: [/*]
+2019-03-19 15:55:30,596 [main] INFO  o.s.b.w.s.FilterRegistrationBean 248 - Mapping filter: 'requestContextFilter' to: [/*]
+2019-03-19 15:55:30,596 [main] INFO  o.s.b.w.s.FilterRegistrationBean 248 - Mapping filter: 'demoFilter' to: [/*]
+2019-03-19 15:55:30,627 [main] INFO  c.m.d.c3p0.DatasourceConfiguration 29 - com.mchange.v2.c3p0.ComboPooledDataSource.class
+2019-03-19 15:55:30,643 [MLog-Init-Reporter] INFO  com.mchange.v2.log.MLog 212 - MLog clients using slf4j logging.
+2019-03-19 15:55:30,737 [main] INFO  com.mchange.v2.c3p0.C3P0Registry 212 - Initializing c3p0-0.9.5.2 [built 08-December-2015 22:06:04 -0800; debug? true; trace: 10]
+2019-03-19 15:55:30,861 [main] INFO  c.m.v.c.i.AbstractPoolBackedDataSource 212 - Initializing c3p0 pool... com.mchange.v2.c3p0.ComboPooledDataSource [ acquireIncrement -> 5, acquireRetryAttempts -> 30, acquireRetryDelay -> 1000, autoCommitOnClose -> false, automaticTestTable -> null, breakAfterAcquireFailure -> false, checkoutTimeout -> 0, connectionCustomizerClassName -> null, connectionTesterClassName -> com.mchange.v2.c3p0.impl.DefaultConnectionTester, contextClassLoaderSource -> caller, dataSourceName -> 1hge18aa115bsw1dhl9r1q|62891fc8, debugUnreturnedConnectionStackTraces -> false, description -> null, driverClass -> com.mysql.cj.jdbc.Driver, extensions -> {}, factoryClassLocation -> null, forceIgnoreUnresolvedTransactions -> false, forceSynchronousCheckins -> false, forceUseNamedDriverClass -> false, identityToken -> 1hge18aa115bsw1dhl9r1q|62891fc8, idleConnectionTestPeriod -> 60, initialPoolSize -> 15, jdbcUrl -> jdbc:mysql://localhost:3306/demo_db?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&serverTimezone=GMT, maxAdministrativeTaskTime -> 0, maxConnectionAge -> 0, maxIdleTime -> 120, maxIdleTimeExcessConnections -> 0, maxPoolSize -> 20, maxStatements -> 1000, maxStatementsPerConnection -> 0, minPoolSize -> 10, numHelperThreads -> 3, preferredTestQuery -> null, privilegeSpawnedThreads -> false, properties -> {user=******, password=******}, propertyCycle -> 0, statementCacheNumDeferredCloseThreads -> 0, testConnectionOnCheckin -> false, testConnectionOnCheckout -> false, unreturnedConnectionTimeout -> 0, userOverrides -> {}, usesTraditionalReflectiveProxies -> false ]
+2019-03-19 15:55:31,002 [main] INFO  o.h.jpa.internal.util.LogHelper 31 - HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2019-03-19 15:55:31,049 [main] INFO  org.hibernate.Version 46 - HHH000412: Hibernate Core {5.3.7.Final}
+2019-03-19 15:55:31,049 [main] INFO  org.hibernate.cfg.Environment 213 - HHH000206: hibernate.properties not found
+2019-03-19 15:55:31,158 [main] INFO  o.h.annotations.common.Version 49 - HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2019-03-19 15:55:31,283 [main] INFO  org.hibernate.dialect.Dialect 157 - HHH000400: Using dialect: org.hibernate.dialect.MySQL5Dialect
+2019-03-19 15:55:31,813 [main] INFO  o.s.o.j.LocalContainerEntityManagerFactoryBean 415 - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2019-03-19 15:55:31,829 [main] INFO  o.s.b.f.a.AutowiredAnnotationBeanPostProcessor 447 - Autowired annotation is not supported on static fields: private static java.lang.String com.memory.controller.DemoController.label
+2019-03-19 15:55:32,094 [main] INFO  o.s.a.r.c.CachingConnectionFactory 455 - Attempting to connect to: [127.0.0.1:5672]
+2019-03-19 15:55:32,125 [main] INFO  o.s.a.r.c.CachingConnectionFactory 491 - Created new connection: rabbitConnectionFactory#7ec3a8bd:0/SimpleConnection@427308f8 [delegate=amqp://guest@127.0.0.1:5672/, localPort= 56883]
+2019-03-19 15:55:32,359 [main] INFO  com.memory.mina.MinaServer 59 - 
+mina-server-start: 9123
+2019-03-19 15:55:32,499 [main] INFO  o.s.s.c.ThreadPoolTaskExecutor 171 - Initializing ExecutorService 'applicationTaskExecutor'
+2019-03-19 15:55:32,655 [main] WARN  o.s.b.a.o.j.JpaBaseConfiguration$JpaWebConfiguration$JpaWebMvcConfiguration 234 - spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2019-03-19 15:55:32,687 [main] INFO  o.s.b.a.w.s.WelcomePageHandlerMapping 56 - Adding welcome page: class path resource [public/index.html]
+2019-03-19 15:55:32,921 [main] INFO  o.a.coyote.http11.Http11NioProtocol 173 - Starting ProtocolHandler ["http-nio-8080"]
+2019-03-19 15:55:32,921 [main] INFO  o.a.tomcat.util.net.NioSelectorPool 173 - Using a shared selector for servlet write/read
+2019-03-19 15:55:32,936 [main] INFO  o.s.b.w.e.tomcat.TomcatWebServer 204 - Tomcat started on port(s): 8080 (http) with context path '/parent'
+2019-03-19 15:55:32,936 [main] INFO  com.memory.MainApplication 59 - Started MainApplication in 4.401 seconds (JVM running for 5.047)
+2019-03-19 15:55:36,060 [http-nio-8080-exec-1] INFO  o.a.c.c.C.[.[localhost].[/parent] 173 - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2019-03-19 15:55:36,060 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet 521 - Initializing Servlet 'dispatcherServlet'
+2019-03-19 15:55:36,066 [http-nio-8080-exec-1] INFO  o.s.web.servlet.DispatcherServlet 543 - Completed initialization in 6 ms
+2019-03-19 15:55:36,073 [http-nio-8080-exec-1] INFO  com.memory.common.filter.DemoFilter 53 - ↓↓↓
+--------begin--------------------
+→ Request : GET | 0:0:0:0:0:0:0:1
+→ http://localhost:8080/parent/test
+→ null
+-------------------end-----------
+2019-03-19 15:55:36,086 [http-nio-8080-exec-1] INFO  com.memory.controller.DemoController 41 - 这是 label:null
